@@ -129,6 +129,16 @@ const Home = () => {
 
   // Main render logic, no error state to show; instead, we always show artworks
   return (
+  <div
+    style={{
+      backgroundImage: `url('/uploads/samuel-zeller-medium-b832fe04 (1).jpg')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed', // Optional
+      height: '100%', // Ensure the div takes up the full viewport height
+      width: '100%', // Ensure the div takes up the full viewport width
+    }}
+  >
     <div className="container mt-4">
       <h1 className="display-4 text-center mb-4">Art Collection</h1>
       <div className="row">
@@ -146,6 +156,7 @@ const Home = () => {
         ))}
       </div>
     </div>
+  </div> 
   );
 };
 
