@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
     const verifyToken = async () => {
       if (token) {
         try {
-          const response = await axios.get('/profile', {
+          const response = await axios.get('https://artbackend-1.onrender.com/profile', {
             headers: { Authorization: `Bearer ${token}` }
           });
           // Adjust this to match your backend response structure

@@ -27,7 +27,7 @@ const ArtworkDetail = () => {
   useEffect(() => {
     const fetchArtwork = async () => {
       try {
-        const response = await axios.get(`/artworks/${id}`, {
+        const response = await axios.get(`https://artbackend-1.onrender.com/artworks/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setArtwork(response.data.artwork);
@@ -62,7 +62,7 @@ const ArtworkDetail = () => {
   const handleUpdateArtwork = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`/api/artworks/${id}`, updatedArtworkData, {
+      const response = await axios.put(`https://artbackend-1.onrender.com/artworks/${id}`, updatedArtworkData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setArtwork(response.data.artwork);
@@ -77,7 +77,7 @@ const ArtworkDetail = () => {
 
   const handleDeleteArtwork = async () => {
     try {
-      await axios.delete(`/api/artworks/${id}`, {
+      await axios.delete(`https://artbackend-1.onrender.com/artworks/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Artwork deleted successfully');

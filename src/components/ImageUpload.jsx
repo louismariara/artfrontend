@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 // src/components/ImageUpload.jsx
 import  { useState } from 'react';
 import axios from 'axios';
@@ -18,7 +19,7 @@ const ImageUpload = ({ onImageUpload }) => {
     formData.append('file', selectedFile);
 
     try {
-      const response = await axios.post('/upload-image', formData, {
+      const response = await axios.post('https://artbackend-1.onrender.com/upload-image', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`

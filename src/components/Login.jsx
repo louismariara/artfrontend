@@ -16,7 +16,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/login', {
+      const response = await axios.post('https://artbackend-1.onrender.com/login', {
         email,
         password,
       });

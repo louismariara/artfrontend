@@ -18,7 +18,7 @@ const Search = () => {
     ).filter(Boolean).join('&');
     
     try {
-      const response = await axios.get(`/search-artworks?${queryString}`, {
+      const response = await axios.get(`https://artbackend-1.onrender.com/search-artworks?${queryString}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSearchResults(response.data.artworks);

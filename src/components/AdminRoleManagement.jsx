@@ -13,7 +13,7 @@ const AdminRoleManagement = () => {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await axios.get('/roles', {
+        const response = await axios.get('https://artbackend-1.onrender.com/roles', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setRoles(response.data.roles);
@@ -30,7 +30,7 @@ const AdminRoleManagement = () => {
   const handleCreateRole = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/roles', { name: newRoleName }, {
+      const response = await axios.post('https://artbackend-1.onrender.com/roles', { name: newRoleName }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRoles([...roles, response.data.role]);
@@ -47,7 +47,7 @@ const AdminRoleManagement = () => {
 
   const handleUpdateRole = async (roleId, newName) => {
     try {
-      const response = await axios.put(`/roles/${roleId}`, { name: newName }, {
+      const response = await axios.put(`https://artbackend-1.onrender.com/roles/${roleId}`, { name: newName }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRoles(roles.map(role => role.id === roleId ? response.data.role : role));
@@ -63,7 +63,7 @@ const AdminRoleManagement = () => {
 
   const handleDeleteRole = async (roleId) => {
     try {
-      await axios.delete(`/roles/${roleId}`, {
+      await axios.delete(`https://artbackend-1.onrender.com/roles/${roleId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRoles(roles.filter(role => role.id !== roleId));

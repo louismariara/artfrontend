@@ -101,7 +101,7 @@ const Home = () => {
       setLoading(true);
       // Do not reset error here, only on successful fetch
       try {
-        const response = await axios.get('/artworks', {
+        const response = await axios.get('https://artbackend-1.onrender.com/artworks', {
           headers: { Authorization: token ? `Bearer ${token}` : '' }
         });
         console.log('Response from server:', response.data);

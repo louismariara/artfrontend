@@ -14,7 +14,7 @@ const { token } = useAuth();
   useEffect(() => {
     const fetchArtworks = async () => {
       try {
-        const response = await axios.get('/artworks', {
+        const response = await axios.get('https://artbackend-1.onrender.com/artworks', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setArtworks(response.data.artworks);

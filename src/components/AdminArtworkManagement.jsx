@@ -24,7 +24,7 @@ const AdminArtworkManagement = () => {
   // Function to fetch artworks from the server
   const fetchArtworks = async () => {
     try {
-      const response = await axios.get('/artworks', {
+      const response = await axios.get('https://artbackend-1.onrender.com/artworks', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setArtworks(response.data.artworks);
@@ -43,7 +43,7 @@ const AdminArtworkManagement = () => {
   const handleAddArtwork = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/artworks', newArtwork, {
+      await axios.post('https://artbackend-1.onrender.com/artworks', newArtwork, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Artwork added successfully');
@@ -70,7 +70,7 @@ const AdminArtworkManagement = () => {
   // Function to handle deleting an artwork
   const handleDeleteArtwork = async (id) => {
     try {
-      await axios.delete(`/artworks/${id}`, {
+      await axios.delete(`https://artbackend-1.onrender.com/artworks/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Artwork deleted successfully');
@@ -85,7 +85,7 @@ const AdminArtworkManagement = () => {
   // Function to handle updating an artwork
   const handleUpdateArtwork = async (id, updatedData) => {
     try {
-      await axios.put(`/artworks/${id}`, updatedData, {
+      await axios.put(`https://artbackend-1.onrender.com/artworks/${id}`, updatedData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Artwork updated successfully');

@@ -10,22 +10,22 @@ export default defineConfig({
   server: {
     proxy: {
       '/sign-up': {
-        target: 'http://localhost:5000',
+        target: 'https://artbackend-1.onrender.com',
         changeOrigin: true,
         secure: false,
       },
       '/login': {
-        target: 'http://localhost:5000',
+        target: 'https://artbackend-1.onrender.com',
         changeOrigin: true,
         secure: false,
       },
       '/artworks': {
-        target: 'http://localhost:5000', 
+        target: 'https://artbackend-1.onrender.com', 
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/artworks/, '')
       },
       '^/api/.*': {
-        target: 'http://localhost:5000',
+        target: 'https://artbackend-1.onrender.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
         secure: false,

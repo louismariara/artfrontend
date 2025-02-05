@@ -26,7 +26,7 @@ const CreateArtwork = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/artworks', formData, {
+      const response = await axios.post('https://artbackend-1.onrender.com/artworks', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Artwork created successfully');
