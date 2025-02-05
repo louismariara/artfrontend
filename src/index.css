@@ -90,39 +90,45 @@ input[type="password"] {
 }
 
 /* Card styling for artworks or content blocks */
+/* Frosted glass effect for cards */
 .card {
-  background-color: rgba(255, 255, 255, 0.7); /* Frosted glass effect */
-  backdrop-filter: blur(5px); /* Blur effect to mimic frosted glass */
-  border: 1px solid var(--border-color);
-  border-radius: 5px;
-  box-shadow: 0 2px 5px var(--shadow-color);
+  background: rgba(255, 255, 255, 0.2); /* More transparency */
+  backdrop-filter: blur(10px); /* Stronger blur */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+  border-radius: 10px;
+  box-shadow: 0 4px 6px var(--shadow-color);
   padding: 1.5rem;
   margin-bottom: 1rem;
+  color: black; /* Ensures text inside the card is black */
 }
 
-/* Navbar styling */
+/* Navbar with glass effect */
 .navbar {
-  background-color: transparent; /* Clear background */
+  background: rgba(255, 255, 255, 0.1); /* Transparent background */
+  backdrop-filter: blur(15px); /* Blur for glass effect */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
 }
+
+/* Navbar content visibility */
 .navbar-brand, 
 .navbar-nav .nav-link,
 .navbar .btn-outline-success {
-  color: var(--text-color); /* Ensure text is visible over any background */
+  color: #f8f9fa; /* Bright color for visibility */
+  font-weight: bold;
 }
+
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link:focus,
 .navbar .btn-outline-success:hover {
   color: var(--secondary-color);
 }
 
-/* Navbar search form */
+/* Navbar Search form styling */
 .navbar .form-control {
-  border-radius: 5px 0 0 5px;
-  border-right: none;
-  background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent for form elements */
+  background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent */
   color: var(--text-color);
-}
-.navbar .form-control:focus {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}  .navbar .form-control:focus {
   outline: none;
   box-shadow: none;
 }

@@ -92,6 +92,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   // State to manage error status, not reset on each fetch attempt
   const [error, setError] = useState(null);
+  console.error('Error:', error);
   // Get the authentication token from the AuthContext
   const { token } = useAuth();
 
