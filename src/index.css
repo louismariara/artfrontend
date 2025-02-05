@@ -27,7 +27,7 @@ body {
   display: flex;
   flex-direction: column;
   /* Set a background image; replace 'path/to/image.jpg' with your actual image path */
-  background-image: url('uploads/colorful-abstract-background-graphic-modern-260nw-1563061951.webp');
+  background-image: url('uploads/samuel-zeller-medium-b832fe04 (1).jpg');
   background-size: cover; /* This will make the image cover the entire viewport */
   background-position: center; /* Centers the image */
   background-attachment: fixed; /* Optional: keeps the background fixed while scrolling */
