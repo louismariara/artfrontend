@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 
@@ -18,7 +18,7 @@ const Search = () => {
     ).filter(Boolean).join('&');
     
     try {
-      const response = await axios.get(`https://artbackend-1.onrender.com/search-artworks?${queryString}`, {
+      const response = await apiClient.get(`/search-artworks?${queryString}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSearchResults(response.data.artworks);

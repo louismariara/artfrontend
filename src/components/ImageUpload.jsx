@@ -1,54 +1,61 @@
 /* eslint-disable react/prop-types */
 // src/components/ImageUpload.jsx
-import  { useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
+import apiClient from '../api/client';
 import { toast } from 'react-toastify';
-import { useAuth } from '../context/AuthContext'; // Adjust the path according to your project structure
+import { useAuth } from '../context/AuthContext';
 
+// Not a <form> on purpose: this sits inside the artwork form, and a form inside
+// a form makes "Upload" also submit the artwork before the picture is ready.
 const ImageUpload = ({ onImageUpload }) => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const { token } = useAuth();
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    setSelectedFile(event.target.files[0] || null);
   };
 
-  const handleUpload = async (event) => {
-    event.preventDefault();
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      toast.error('Choose an image first');
+      return;
+    }
     const formData = new FormData();
     formData.append('file', selectedFile);
 
+    setUploading(true);
     try {
-      const response = await axios.post('https://artbackend-1.onrender.com/upload-image', formData, {
+      const response = await apiClient.post('/upload-image', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`
         }
       });
-      console.log(response.data);
-      toast.success('Image upload confirmed by backend');
-      // Call the callback function if provided
+      toast.success('Image uploaded');
       onImageUpload && onImageUpload(response.data.filename);
     } catch (error) {
       console.error('Upload failed:', error);
-      toast.error(error.response?.data.message || 'Failed to confirm image upload with backend');
+      toast.error(error.response?.data?.message || 'Image upload failed');
+    } finally {
+      setUploading(false);
     }
   };
 
   return (
-    <form onSubmit={handleUpload}>
-      <div className="mb-3">
-        <label htmlFor="imageUpload" className="form-label">Upload Image</label>
-        <input 
-          type="file" 
-          className="form-control" 
-          id="imageUpload" 
-          onChange={handleFileChange} 
-          required 
-        />
-      </div>
-      <button type="submit" className="btn btn-primary">Upload</button>
-    </form>
+    <div className="mb-3">
+      <label htmlFor="imageUpload" className="form-label">Upload Image</label>
+      <input
+        type="file"
+        accept="image/png,image/jpeg,image/gif,image/webp"
+        className="form-control mb-2"
+        id="imageUpload"
+        onChange={handleFileChange}
+      />
+      <button type="button" className="btn btn-primary" onClick={handleUpload} disabled={uploading}>
+        {uploading ? 'Uploading...' : 'Upload'}
+      </button>
+    </div>
   );
 };
 
