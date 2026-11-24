@@ -5,6 +5,7 @@ import UnlockAccount from './components/UnlockAccount';
 import SignUp from './components/SignUp';
 import ArtworkList from './components/ArtworkList';
 import ArtworkDetail from './components/ArtworkDetail';
+import PublicArtwork from './components/PublicArtwork';
 import Profile from './components/Profile';
 import AdminDashboard from './components/AdminDashboard';
 import Search from './components/Search';
@@ -18,11 +19,18 @@ import SessionManagement from './components/SessionManagement';
 import MyArtwork from './components/MyArtwork';
 import CollectionManagement from './components/CollectionManagement';
 import MyWishlist from './components/MyWishlist';
+import GallerySettings from './components/GallerySettings';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import PropTypes from 'prop-types';
 
 const ALL_ROLES = ['admin', 'curator', 'member'];
+
+const ArtworkPage = () => {
+  const { token, isLoading } = useAuth();
+  if (isLoading) return <div className="d-flex justify-content-center mt-5">Loading...</div>;
+  return token ? <ArtworkDetail /> : <PublicArtwork />;
+};
 
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const { user, token, isLoading } = useAuth();
@@ -74,14 +82,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/artworks/:id"
-          element={
-            <ProtectedRoute allowedRoles={ALL_ROLES}>
-              <ArtworkDetail />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/artworks/:id" element={<ArtworkPage />} />
         <Route
           path="/collections"
           element={
@@ -143,6 +144,14 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={ALL_ROLES}>
               <Search />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <GallerySettings />
             </ProtectedRoute>
           }
         />

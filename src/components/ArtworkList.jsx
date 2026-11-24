@@ -4,6 +4,7 @@ import apiClient from '../api/client';
 import { imageUrl } from '../utils/images';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
+import WorkCaption from './WorkCaption';
 
 const ArtworkList = () => {
   const [artworks, setArtworks] = useState([]);
@@ -44,9 +45,8 @@ const ArtworkList = () => {
                 />
               )}
               <div className="card-body">
-                <h5 className="card-title">{artwork.title}</h5>
-                <p className="card-text">By: {artwork.artist}</p>
-                <Link to={`/artworks/${artwork.id}`} className="btn btn-primary">View Details</Link>
+                <WorkCaption artwork={artwork} heading="h3" />
+                <Link to={`/artworks/${artwork.id}`}>View</Link>
               </div>
             </div>
           </div>

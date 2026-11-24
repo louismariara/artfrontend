@@ -4,6 +4,19 @@ import { toast } from 'react-toastify';
 import platformClient from '../../api/platformClient';
 import { galleryAddress } from '../../utils/gallery';
 
+const leaseBadge = (gallery) => {
+  if (gallery.lease_state === 'expired') {
+    return { text: `Expired ${gallery.paid_until}`, className: 'bg-danger' };
+  }
+  if (gallery.lease_state === 'expiring') {
+    return { text: `Ends ${gallery.paid_until}`, className: 'bg-warning text-dark' };
+  }
+  if (gallery.lease_state === 'current') {
+    return { text: `Paid through ${gallery.paid_until}`, className: 'bg-success' };
+  }
+  return { text: 'No lease recorded', className: 'bg-secondary' };
+};
+
 const PlatformGalleries = () => {
   const [galleries, setGalleries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -64,9 +77,29 @@ const PlatformGalleries = () => {
 
   if (loading) return <div>Loading galleries...</div>;
 
+  const attention = galleries.filter(
+    (gallery) => gallery.lease_state === 'expired' || gallery.lease_state === 'expiring'
+  );
+
   return (
     <>
       <h2 className="mb-3">Galleries ({galleries.length})</h2>
+      {attention.length > 0 && (
+        <div className="alert alert-warning">
+          <strong>Leases that need attention.</strong>
+          <ul className="mb-0 mt-2">
+            {attention.map((gallery) => (
+              <li key={gallery.id}>
+                <Link to={`/platform/galleries/${gallery.id}`}>{gallery.name}</Link>
+                {' '}
+                {gallery.lease_state === 'expired'
+                  ? `expired on ${gallery.paid_until}.`
+                  : `is paid through ${gallery.paid_until} (${gallery.days_left} day${gallery.days_left === 1 ? '' : 's'} left).`}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className="table-responsive">
         <table className="table align-middle">
           <thead>
@@ -74,6 +107,7 @@ const PlatformGalleries = () => {
               <th>Name</th>
               <th>Address</th>
               <th>Status</th>
+              <th>Lease</th>
               <th>Members</th>
               <th>Artworks</th>
               <th>Created</th>
@@ -91,6 +125,9 @@ const PlatformGalleries = () => {
                   <span className={`badge ${gallery.status === 'active' ? 'bg-success' : 'bg-danger'}`}>
                     {gallery.status}
                   </span>
+                </td>
+                <td>
+                  <span className={`badge ${leaseBadge(gallery).className}`}>{leaseBadge(gallery).text}</span>
                 </td>
                 <td>{gallery.member_count}</td>
                 <td>{gallery.artwork_count}</td>

@@ -16,14 +16,14 @@ import PlatformGalleryDetail from './platform/PlatformGalleryDetail';
 const MainSite = () => (
   <BrowserRouter>
     <PlatformProvider>
-      <div className="on-photo">
-        <nav className="navbar navbar-expand navbar-light bg-light px-3">
-          <Link className="navbar-brand" to="/">{PRODUCT_NAME}</Link>
-          <div className="navbar-nav ms-auto">
-            <Link className="nav-link" to="/create-gallery">Create your gallery</Link>
-            <Link className="nav-link" to="/platform">Platform admin</Link>
-          </div>
-        </nav>
+      <div>
+        <header className="site-bar">
+          <Link className="site-brand" to="/">{PRODUCT_NAME}</Link>
+          <nav className="site-bar-links" aria-label="Platform">
+            <Link to="/create-gallery">Create your gallery</Link>
+            <Link to="/platform">Platform admin</Link>
+          </nav>
+        </header>
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/create-gallery" element={<CreateGallery />} />

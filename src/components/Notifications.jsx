@@ -66,11 +66,14 @@ const Notifications = () => {
   return (
     <div className="container mt-4">
       <div className="card p-4">
-        <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-          <h1 className="display-4 mb-0">Notifications</h1>
+        <div className="notice-head">
+          <div>
+            <h1 className="mb-0">Notifications</h1>
+            <p>{unreadCount > 0 ? `${unreadCount} unread` : 'You are caught up.'}</p>
+          </div>
           {unreadCount > 0 && (
-            <button className="btn btn-outline-secondary" onClick={handleMarkAllRead}>
-              Mark All as Read
+            <button type="button" className="btn btn-outline-secondary" onClick={handleMarkAllRead}>
+              Mark all as read
             </button>
           )}
         </div>
@@ -78,23 +81,17 @@ const Notifications = () => {
         {notifications.length === 0 ? (
           <p className="text-center text-muted">No notifications yet.</p>
         ) : (
-          <ul className="list-unstyled mb-0">
+          <ul className="notice-list">
             {notifications.map((n) => (
-              <li
-                key={n.id}
-                className="d-flex justify-content-between align-items-start mb-3 pb-3"
-                style={{ borderBottom: '1px solid var(--border-color)' }}
-              >
-                <div>
-                  <p className={`mb-1 ${n.is_read ? 'text-muted' : ''}`}>
-                    {!n.is_read && <span className="badge bg-danger me-2">New</span>}
-                    {n.message}
-                  </p>
+              <li key={n.id} className={`notice-row${n.is_read ? ' is-read' : ''}`}>
+                <span className="notice-dot" aria-hidden="true" />
+                <div className="notice-body">
+                  <p>{n.message}</p>
                   <span className="small text-muted">{new Date(n.created_at).toLocaleString()}</span>
                 </div>
                 {!n.is_read && (
-                  <button className="btn btn-sm btn-outline-secondary" onClick={() => handleMarkRead(n.id)}>
-                    Mark as Read
+                  <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => handleMarkRead(n.id)}>
+                    Mark as read
                   </button>
                 )}
               </li>

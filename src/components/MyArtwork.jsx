@@ -2,12 +2,15 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../api/client';
 import { imageUrl } from '../utils/images';
+import { formatPrice, priceFieldLabel } from '../utils/money';
 import { useAuth } from '../context/AuthContext';
+import { useGallery } from '../context/GalleryContext';
 import { toast } from 'react-toastify';
 import ImageUpload from './ImageUpload';
 
 const MyArtwork = () => {
   const { token, user } = useAuth();
+  const { gallery } = useGallery();
   const navigate = useNavigate();
   const [artworks, setArtworks] = useState([]);
   const [allMembers, setAllMembers] = useState([]);
@@ -222,8 +225,8 @@ const MyArtwork = () => {
             <input type="text" className="form-control" id="theme" name="theme" value={newArtwork.theme} onChange={handleInputChange} />
           </div>
           <div className="mb-3">
-            <label htmlFor="price" className="form-label">Price</label>
-            <input type="number" step="0.01" className="form-control" id="price" name="price" value={newArtwork.price} onChange={handleInputChange} />
+            <label htmlFor="price" className="form-label">{priceFieldLabel(gallery?.currency)}</label>
+            <input type="number" step="0.01" min="0" className="form-control" id="price" name="price" value={newArtwork.price} onChange={handleInputChange} placeholder="Leave blank if it is not for sale" />
           </div>
           <div className="mb-3">
             <label htmlFor="category" className="form-label">Category</label>
@@ -306,7 +309,8 @@ const MyArtwork = () => {
                       {artwork.my_role === 'owner' ? 'Owner' : 'Collaborator'}
                     </span>
                   </div>
-                  <p className="card-text">By: {artwork.artist}</p>
+                  <p className="card-text mb-1">By: {artwork.artist}</p>
+                  <p className="card-text fw-semibold">{formatPrice(artwork.price, gallery?.currency) ?? 'Price on request'}</p>
                   <div className="mb-2">
                     <button className="btn btn-primary btn-sm me-2" onClick={() => navigate(`/artworks/${artwork.id}`)}>Edit</button>
                     {artwork.my_role === 'owner' && (

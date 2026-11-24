@@ -6,8 +6,12 @@ import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import ImageUpload from './ImageUpload';
 import { isAdmin } from '../utils/roles';
+import { priceFieldLabel } from '../utils/money';
+import { useGallery } from '../context/GalleryContext';
+import WorkCaption from './WorkCaption';
 
 const ArtworkDetail = () => {
+  const { gallery } = useGallery();
   const [artwork, setArtwork] = useState(null);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -227,8 +231,7 @@ const ArtworkDetail = () => {
   return (
     <div className="container mt-4">
       <div className="card p-4 mb-4">
-        <h1 className="display-4">{artwork.title}</h1>
-        <p className="lead">By: {artwork.artist}</p>
+        <WorkCaption artwork={artwork} heading="h1" />
       </div>
 
       {artwork.image_path && (
@@ -244,8 +247,6 @@ const ArtworkDetail = () => {
       <div className="card p-4 mb-4">
         {!isEditing ? (
           <dl className="row">
-            <dt className="col-sm-3">Medium</dt>
-            <dd className="col-sm-9">{artwork.medium}</dd>
             <dt className="col-sm-3">Dimensions</dt>
             <dd className="col-sm-9">{artwork.dimensions}</dd>
             <dt className="col-sm-3">Condition</dt>
@@ -343,10 +344,11 @@ const ArtworkDetail = () => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="price" className="form-label">Price</label>
+              <label htmlFor="price" className="form-label">{priceFieldLabel(gallery?.currency)}</label>
               <input
                 type="number"
                 step="0.01"
+                min="0"
                 className="form-control"
                 id="price"
                 name="price"

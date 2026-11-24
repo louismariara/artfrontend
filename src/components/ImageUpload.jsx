@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 
 // Not a <form> on purpose: this sits inside the artwork form, and a form inside
 // a form makes "Upload" also submit the artwork before the picture is ready.
-const ImageUpload = ({ onImageUpload }) => {
+const ImageUpload = ({ onImageUpload, label = 'Upload Image', inputId = 'imageUpload' }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const { token } = useAuth();
@@ -44,12 +44,12 @@ const ImageUpload = ({ onImageUpload }) => {
 
   return (
     <div className="mb-3">
-      <label htmlFor="imageUpload" className="form-label">Upload Image</label>
+      <label htmlFor={inputId} className="form-label">{label}</label>
       <input
         type="file"
         accept="image/png,image/jpeg,image/gif,image/webp"
         className="form-control mb-2"
-        id="imageUpload"
+        id={inputId}
         onChange={handleFileChange}
       />
       <button type="button" className="btn btn-primary" onClick={handleUpload} disabled={uploading}>

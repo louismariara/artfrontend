@@ -14,7 +14,7 @@ Message.propTypes = { title: PropTypes.string.isRequired, children: PropTypes.no
 // Shows the gallery app only when the gallery in the address exists and is
 // active. With no gallery in the address it shows the main site instead.
 const GalleryGate = ({ children }) => {
-  const { status, slug } = useGallery();
+  const { status, slug, gallery } = useGallery();
 
   if (status === 'no-gallery') {
     return <MainSite />;
@@ -33,13 +33,15 @@ const GalleryGate = ({ children }) => {
     return (
       <>
         <Message title="This gallery is suspended">
-          Access to this gallery has been paused. Please contact the gallery owner.
+          {gallery?.pause_reason === 'lease'
+            ? 'This gallery’s access period has ended. Please contact the gallery owner.'
+            : 'Access to this gallery has been paused. Please contact the gallery owner.'}
+          <span className="d-block mt-3">
+            <button className="btn btn-outline-secondary" onClick={() => window.location.reload()}>
+              Try again
+            </button>
+          </span>
         </Message>
-        <div className="text-center">
-          <button className="btn btn-outline-secondary" onClick={() => window.location.reload()}>
-            Try again
-          </button>
-        </div>
       </>
     );
   }

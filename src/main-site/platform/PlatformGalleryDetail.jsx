@@ -3,6 +3,21 @@ import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import platformClient from '../../api/platformClient';
 import { galleryAddress } from '../../utils/gallery';
+import { formatPrice } from '../../utils/money';
+
+const leaseBadge = (gallery) => {
+  if (!gallery) return { text: 'No lease recorded', className: 'bg-secondary' };
+  if (gallery.lease_state === 'expired') {
+    return { text: `Expired ${gallery.paid_until}`, className: 'bg-danger' };
+  }
+  if (gallery.lease_state === 'expiring') {
+    return { text: `Ends ${gallery.paid_until}`, className: 'bg-warning text-dark' };
+  }
+  if (gallery.lease_state === 'current') {
+    return { text: `Paid through ${gallery.paid_until}`, className: 'bg-success' };
+  }
+  return { text: 'No lease recorded', className: 'bg-secondary' };
+};
 
 const memberState = (member) => {
   if (member.admin_locked) return { label: 'Blocked by gallery admin', className: 'bg-danger' };
@@ -18,6 +33,8 @@ const PlatformGalleryDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [busyMemberId, setBusyMemberId] = useState(null);
+  const [paidUntil, setPaidUntil] = useState('');
+  const [leaseBusy, setLeaseBusy] = useState(false);
 
   const fetchAll = async () => {
     try {
@@ -26,6 +43,7 @@ const PlatformGalleryDetail = () => {
         platformClient.get(`/galleries/${id}/artworks`),
       ]);
       setGallery(membersRes.data.gallery);
+      setPaidUntil(membersRes.data.gallery.paid_until || '');
       setMembers(membersRes.data.members);
       setArtworks(artworksRes.data.artworks);
       setError(null);
@@ -76,6 +94,35 @@ const PlatformGalleryDetail = () => {
     }
   };
 
+  const saveLease = async () => {
+    setLeaseBusy(true);
+    try {
+      const { data } = await platformClient.patch(`/galleries/${id}/lease`, {
+        paid_until: paidUntil || null,
+      });
+      setGallery((current) => ({ ...current, ...data.gallery }));
+      setPaidUntil(data.gallery.paid_until || '');
+      toast.success(data.message || 'Lease updated');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Could not save the lease');
+    } finally {
+      setLeaseBusy(false);
+    }
+  };
+
+  const sendReminder = async () => {
+    if (!window.confirm(`Email a payment reminder to the admins of ${gallery.name}?`)) return;
+    setLeaseBusy(true);
+    try {
+      const { data } = await platformClient.post(`/galleries/${id}/lease-reminder`);
+      toast.success(data.message);
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Could not send the reminder');
+    } finally {
+      setLeaseBusy(false);
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) {
     return (
@@ -96,6 +143,44 @@ const PlatformGalleryDetail = () => {
       <p className="text-muted">
         <a href={galleryAddress(gallery.slug)} target="_blank" rel="noreferrer">{galleryAddress(gallery.slug)}</a>
       </p>
+
+      <div className="card p-3 mb-3">
+        <h3 className="h5">Lease</h3>
+        <p className="mb-2">
+          <span className={`badge ${leaseBadge(gallery).className}`}>{leaseBadge(gallery).text}</span>
+          {gallery.lease_state === 'current' || gallery.lease_state === 'expiring' ? (
+            <span className="ms-2 text-muted">{`${gallery.days_left} ${gallery.days_left === 1 ? 'day' : 'days'} left`}</span>
+          ) : null}
+        </p>
+        <p className="text-muted small">
+          There is no card payment yet. Enter the last day this gallery has paid for.
+          This list warns you when that date is within 14 days, or already past.
+          The day after that date, the gallery is suspended on its own. Set a later date to open it again.
+          A reminder emails every admin of this gallery and also leaves a notice in their account.
+        </p>
+        <div className="row g-2 align-items-end">
+          <div className="col-sm-auto">
+            <label className="form-label" htmlFor="paid-until">Paid through</label>
+            <input
+              id="paid-until"
+              type="date"
+              className="form-control"
+              value={paidUntil}
+              onChange={(event) => setPaidUntil(event.target.value)}
+            />
+          </div>
+          <div className="col-sm-auto">
+            <button type="button" className="btn btn-primary" disabled={leaseBusy} onClick={saveLease}>
+              Save lease
+            </button>
+          </div>
+          <div className="col-sm-auto">
+            <button type="button" className="btn btn-outline-dark" disabled={leaseBusy} onClick={sendReminder}>
+              Email payment reminder
+            </button>
+          </div>
+        </div>
+      </div>
 
       <h3 className="h5 mt-4">Members ({members.length})</h3>
       <div className="table-responsive">
@@ -142,7 +227,7 @@ const PlatformGalleryDetail = () => {
                 <td>{artwork.title}</td>
                 <td>{artwork.artist}</td>
                 <td>{artwork.category || '-'}</td>
-                <td>{artwork.price !== null ? artwork.price : '-'}</td>
+                <td>{formatPrice(artwork.price, gallery?.currency) ?? '—'}</td>
                 <td>{artwork.views}</td>
               </tr>
             ))}
